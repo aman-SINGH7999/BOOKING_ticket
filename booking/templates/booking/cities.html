@@ -1,0 +1,68 @@
+{% extends 'booking/admin_base.html' %}
+{% load static %}
+
+{% block adm_bas %}
+<div class="container main-body my-5">
+
+    <div class="card text-white">
+        <div class='bg-dark'>
+            <h3>Cities</h3>
+        </div>
+        
+        <table class="table table-sm border border-dark text-white table-space">
+            <thead>
+                <tr class=''>
+                  <th scope="col">city_id</th>
+                  <th scope="col">City_name</th>
+                  {% comment %} <th scope="col">Movies</th> {% endcomment %}
+                  <th scope="col">Handling</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  {% if cities %}
+                    {% for city in cities %}
+                      <tr class=''>
+                        <th scope="row">{{city.city_id}}</th>
+                        <td>{{city.city_name}}</td>
+                        <td>
+                            <form action="{% url 'updatecity' city.city_id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-warning btn-sm">Update</button>
+                            </form> 
+
+                            <form action="{% url 'deletecity' city.city_id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                            </form> 
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  {% endif %}
+                
+            </tbody>
+        </table>
+    </div>
+
+    <form action="/cities/" method="POST">
+        {% csrf_token %}
+        <div class="row my-3">
+            <div class="col-7">
+                {% for form in forms %}
+                  <div class="">
+                    <p>{{form}}</p>
+                  </div>
+                {% endfor %}
+            </div>
+            <div class="col-3">
+                <button type="submit" class="btn btn-success">Add</button>
+            </div>
+        </div>
+    </form>
+    {{massage}}
+</div>
+<script>
+    {% comment %} xhttp.open("POST", '/cities/delete/');
+    xhttp.setRequestHeader('Content-type') {% endcomment %}
+</script>
+{% endblock adm_bas %}

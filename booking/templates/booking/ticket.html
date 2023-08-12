@@ -1,0 +1,28 @@
+{% extends 'booking/home.html' %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+    <div class="main-body">
+        <div class="card" style="width: 18rem;">
+            <ul class="list-group list-group-flush">         
+              <li class="list-group-item">Gold-seat : {{pi.booking_gold_seat}}</li>
+              <li class="list-group-item">platinum seat : {{pi.booking_platinum_seat}}</li>
+              <li class="list-group-item"> Price : {{pay}}</li>
+            </ul>
+            <div class="card-footer text-white">
+<pre>
+movie :  {{pi.movie.movie_name}}
+Hall  :  {{pi.hall.hall_name}}
+City  :  {{pi.hall.city_name}}
+Time  :  {{pi.date_time}}
+</pre>
+            </div>
+          </div>  
+          <div class="text-white">
+            Ticket booked successfully!!!!
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

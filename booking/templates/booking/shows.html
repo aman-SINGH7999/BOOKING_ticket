@@ -1,0 +1,154 @@
+{% extends 'booking/admin_base.html' %}
+{% load static %}
+
+{% block adm_bas %}
+<div class="container main-body my-5">
+
+  <div class="card text-white">
+      <div class='bg-dark'>
+          <h3>Shows</h3>
+      </div>
+      
+      <table class="table table-sm border border-dark text-white table-space">
+          <thead>
+              <tr class=''>
+                <th scope="col">show_id</th>
+                <th scope="col">date_time</th>
+                <th scope="col">hall</th>
+                <th scope="col">movie</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                {% if shows %}
+                  {% for show in shows %}
+                    <tr class=''>
+                      <th scope="row">{{show.show_id}}</th>
+                      <td>{{show.date_time}}</td>
+                      <td id="hal_{{show.hall.hall_id}}">{{show.hall.hall_name}}</td>
+                      <td id="mov_{{show.movie.movie_id}}">{{show.movie.movie_name}}</td>
+                      <td>
+                          <div class="row my-3">
+                            <div class="col-4">
+                              <form action="{% url 'updateshow' show.show_id %}" method='POST' class="d-inline">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-outline-warning btn-sm updatebtn" data-bs-toggle="modal" data-bs-target="#updateModal{{show.show_id}}" id="updatebtn_{{show.show_id}}" data-bs-whatever="@mdo">Update</button>
+                              </form>
+                                <div class="modal fade" id="updateModal{{show.show_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Show Detial ID-{{hall.hall_id}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form action="{% url 'updateshow' show.show_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="mb-3">
+                                              <label for="id_movie" class="form-label">Movie</label>
+                                              <select name="movie" id="id_movie" class="form-select form-control">
+                                                {% for movie in movies %}
+                                                <option value="{{movie.0}}">{{movie.1}}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                            <div class="mb-3">
+                                              <label for="id_hall" class="form-label">Hall</label>
+                                              <select name="hall" id="id_hall" class="form-select form-control">
+                                                {% for hall in halls %}
+                                                <option value="{{hall.0}}">{{hall.1}}</option>
+                                                {% endfor %}
+                                              </select>
+                                            </div>
+                                            {{addforms.as_p}}
+                                            <input type="submit" class="btn btn-success px-3" value="Update" />
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                          <form action="{% url 'deleteshow' show.show_id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                          </form>
+                          <input type="hidden" id='i_show_id_{{show.show_id}}' value='{{show.show_id}}'>
+                          <input type="hidden" id='i_date_time_{{show.show_id}}' value='{{show.date_time}}'>
+                          <input type="hidden" id='i_hall_{{show.show_id}}' value='{{show.hall.hall_id}}'>
+                          <input type="hidden" id='i_movie_{{show.show_id}}' value='{{show.movie.movie_id}}'>
+                          <input type="hidden" id='i_gold_seat_{{show.show_id}}' value='{{show.gold_seat}}'>
+                          <input type="hidden" id='i_platinum_seat_{{show.show_id}}' value='{{show.platinum_seat}}'>
+                          <input type="hidden" id='i_gold_seat_count_{{show.show_id}}' value='{{show.gold_seat_count}}'>
+                          <input type="hidden" id='i_platinum_seat_count_{{show.show_id}}' value='{{show.platinum_seat_count}}'>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                {% endif %}
+          </tbody>
+      </table>
+      <script>
+        $('.updatebtn').click((e)=>{
+          let btn_id = e.target.id;
+          let show_id = btn_id.split('_')[1];
+          let date_time = $('#i_date_time_'+show_id).val();
+          let hall = $('#i_hall_'+show_id).val();
+          let movie = $('#i_movie_'+show_id).val();
+          let gold_seat = $('#i_gold_seat_'+show_id).val();
+          let platinum_seat = $('#i_platinum_seat_'+show_id).val();
+          let gold_seat_count = $('#i_gold_seat_count_'+show_id).val();
+          let platinum_seat_count = $('#i_platinum_seat_count_'+show_id).val();
+
+          console.log(show_id, date_time, gold_seat, movie, hall);
+
+          $('#updateModal'+show_id).find('#id_date_time').val(date_time)
+          $('#updateModal'+show_id).find('#id_gold_seat').val(gold_seat)
+          $('#updateModal'+show_id).find('#id_movie').val(movie)
+          $('#updateModal'+show_id).find('#id_hall').val(hall)
+          $('#updateModal'+show_id).find('#id_platinum_seat').val(platinum_seat)
+          $('#updateModal'+show_id).find('#id_gold_seat_count').val(gold_seat_count)
+          $('#updateModal'+show_id).find('#id_platinum_seat_count').val(platinum_seat_count)
+        })
+      </script>
+  </div>
+
+  <div class="row my-3">
+    <div class="col-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal" data-bs-whatever="@mdo">Add Show</button>
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Show Detial</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'shows' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="id_movie" class="form-label">Movie</label>
+                      <select name="movie" id="id_movie" class="form-select form-control">
+                        {% for movie in movies %}
+                        <option value="{{movie.0}}">{{movie.1}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="id_hall" class="form-label">Hall</label>
+                      <select name="hall" id="id_hall" class="form-select form-control">
+                        {% for hall in halls %}
+                        <option value="{{hall.0}}">{{hall.1}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    {{addforms.as_p}}
+                    <input type="submit" class="btn btn-success px-3" value="Add" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock adm_bas %}

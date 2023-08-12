@@ -1,0 +1,122 @@
+{% extends 'booking/admin_base.html' %}
+{% load static %}
+
+{% block adm_bas %}
+<div class="container main-body my-5">
+
+    <div class="card text-white">
+        <div class='bg-dark'>
+            <h3>Movies</h3>
+        </div>
+        
+        <table class="table table-sm border border-dark text-white table-space">
+            <thead>
+                <tr class=''>
+                  <th scope="col">Movie_id</th>
+                  <th scope="col">Movie_name</th>
+                  <th scope="col">Movie_actor</th>
+                  <th scope="col">Movie_director</th>
+                  <th scope="col">Movie_poster</th>
+                  <th scope="col">Handling</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                  {% if movies %}
+                    {% for movie in movies %}
+                      <tr class=''>
+                        <th scope="row">{{movie.movie_id}}</th>
+                        <td>{{movie.movie_name}}</td>
+                        <td>{{movie.movie_actor}}</td>
+                        <td>{{movie.movie_director}}</td>
+                        <td>{{movie.movie_image}}</td>
+                        <td>
+                            {% comment %} <button type="button" class="btn btn-outline-warning btn-sm mt-1">Update</button> {% endcomment %}
+                            <div class="row my-3">
+                              <div class="col-4">
+                                <form action="{% url 'updatemovie' movie.movie_id %}" method='POST' class="d-inline">
+                                  {% csrf_token %}
+                                  <button type="button" class="btn btn-outline-warning btn-sm updatebtn" data-bs-toggle="modal" data-bs-target="#updatemodal{{movie.movie_id}}" id="updatebtn_{{movie.movie_id}}" data-bs-whatever="@mdo">Update</button>
+                                </form>
+                                  <div class="modal fade" id="updatemodal{{movie.movie_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h5 class="modal-title" id="exampleModalLabel">Update Movie Detial ID-{{movie.movie_id}}</h5>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                          <form action="{% url 'updatemovie' movie.movie_id %}" method="POST">
+                                              {% csrf_token %}
+                                              {{addforms.as_p}}
+                                              <input type="submit" class="btn btn-success px-3" value="Update" />
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                          </div>
+                            <form action="{% url 'deletemovie' movie.movie_id %}" method="POST" class="d-inline">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                            </form>
+                            <input type="hidden" id="i_movie_id_{{movie.movie_id}}" value="{{movie.movie_id}}"/>
+                            <input type="hidden" id="i_movie_name_{{movie.movie_id}}" value="{{movie.movie_name}}"/>
+                            <input type="hidden" id="i_movie_about_{{movie.movie_id}}" value="{{movie.movie_about}}"/>
+                            <input type="hidden" id="i_movie_actor_{{movie.movie_id}}" value="{{movie.movie_actor}}"/>
+                            <input type="hidden" id="i_movie_director_{{movie.movie_id}}" value="{{movie.movie_director}}"/>
+                            <input type="hidden" id="i_movie_produser_{{movie.movie_id}}" value="{{movie.movie_produser}}"/>
+                            <input type="hidden" id="i_movie_image_{{movie.movie_id}}" value="{{movie.movie_image}}"/>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  {% endif %}
+                
+            </tbody>
+        </table>
+        
+        <script>
+          $(".updatebtn").click((e)=>{
+            let btn_id = e.target.id;
+            let movie_id = btn_id.split("_")[1];
+            let movie_name = $("#i_movie_name_"+movie_id).val();
+            let movie_about = $("#i_movie_about_"+movie_id).val();
+            let movie_actor = $("#i_movie_actor_"+movie_id).val();
+            let movie_director = $("#i_movie_director_"+movie_id).val();
+            let movie_produser = $("#i_movie_produser_"+movie_id).val();
+            let movie_image = $("#i_movie_image_"+movie_id).val();
+            $("#updatemodal"+movie_id).find("#id_movie_name").val(movie_name);
+            $("#updatemodal"+movie_id).find("#id_movie_about").val(movie_about);
+            $("#updatemodal"+movie_id).find("#id_movie_actor").val(movie_actor);
+            $("#updatemodal"+movie_id).find("#id_movie_director").val(movie_director);
+            $("#updatemodal"+movie_id).find("#id_movie_produser").val(movie_produser);
+            $("#updatemodal"+movie_id).find("#id_movie_image").val(movie_image);
+          });
+        </script>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-4">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal" data-bs-whatever="@mdo">Add movie</button>
+            <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New Movie Detials*</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url 'movies' %}" method="POST">
+                        {% csrf_token %}
+                        {{addforms.as_p}}
+                        <input type="submit" class="btn btn-success px-3" value="Add" />
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock adm_bas %}

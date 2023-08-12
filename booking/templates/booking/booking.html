@@ -1,0 +1,174 @@
+{% extends 'booking/home.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block body %}
+    <div class='container mt-2'>
+        <div class="hall">
+            <div class="row">
+                <div class="screen"></div>
+            </div>
+            <div class="row justify-content-center">
+                {% if goldseats %}
+                    <div class="row gold justify-content-center">
+                        {% for seat in goldseats|times %}
+                            <div class="col seat {% if seat|is_booked:gold_seat_list %} booked {% endif %}" id='g_{{seat}}'>G{{seat}}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if pltmseats %}
+                    <hr>
+                    <div class="row platinum justify-content-center">
+                        {% for seat in pltmseats|times %}
+                            <div class="col seat {% if seat|is_booked:platinum_seat_list %} booked {% endif %}" id='p_{{seat}}'>P{{seat}}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class='main-body'>
+        <div class="card mt-4">
+            <div class="card-header text-white">
+              Info..  of {{show_id}}
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm">
+                    <p><h5 class="card-title">Gold seat: <span class="card-text" id='s-gold-seat'> ****</span> </h5></p>
+                    <p><h5 class="card-title">Platinum seat : <span class="card-text", id='s-platinum-seat'> ****</span> </h5></p>
+                    <p><h5 class="card-title">Total amount : <span class="card-text" id='s-total-amount'> ****</span> </h5></p>
+                </div>
+                <div class="col-sm">
+                    <div class="container main-body">
+                        <div id="paypal-button-container"></div>
+                        <!-- Sample PayPal credentials (client-id) are included -->
+                        <script src="https://www.paypal.com/sdk/js?client-id=ASyp6CVJc5VNsCjqEYAAZWsN5sLZrl3WtBujCaZqwFwnVW0GmRJu2Hft3wJ2UXJYV2ZgxpO4IJxzDlxo&currency=USD&intent=capture&enable-funding=venmo" data-sdk-integration-source="integrationbuilder"></script>
+                        <script>
+                          const paypalButtonsComponent = paypal.Buttons({
+                              // optional styling for buttons
+                              // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
+                              style: {
+                                color: "gold",
+                                shape: "rect",
+                                layout: "vertical"
+                              },
+                
+                              // set up the transaction
+                              createOrder: (data, actions) => {
+                                  // pass in any options from the v2 orders create call:
+                                  // https://developer.paypal.com/api/orders/v2/#orders-create-request-body
+                                  const createOrderPayload = {
+                                      purchase_units: [
+                                          {
+                                              amount: {
+                                                  value: "100"
+                                              }
+                                          }
+                                      ]
+                                  };
+                
+                                  return actions.order.create(createOrderPayload);
+                              },
+                
+                              // finalize the transaction
+                              onApprove: (data, actions) => {
+                                  const captureOrderHandler = (details) => {
+                                      const payerName = details.payer.name.given_name;
+                                      console.log('Transaction completed');
+                                  };
+                
+                                  return actions.order.capture().then(captureOrderHandler);
+                              },
+                
+                              // handle unrecoverable errors
+                              onError: (err) => {
+                                  console.error('An error prevented the buyer from checking out with PayPal');
+                              }
+                          });
+                
+                          paypalButtonsComponent
+                              .render("#paypal-button-container")
+                              .catch((err) => {
+                                  console.error('PayPal Buttons failed to render');
+                              });
+                        </script>
+                    </div>
+                </div>
+              </div>
+              {% comment %} <p><h5 class="card-title">Gold seat: <span class="card-text" id='s-gold-seat'> ****</span> </h5></p>
+              <p><h5 class="card-title">Platinum seat : <span class="card-text", id='s-platinum-seat'> ****</span> </h5></p>
+              <p><h5 class="card-title">Total amount : <span class="card-text" id='s-total-amount'> ****</span> </h5></p> {% endcomment %}
+
+              <input type="hidden" id='s_gold_price' value="{{gold_price}}">
+              <input type="hidden" id='s_platinum_price' value="{{platinum_price}}">
+              <form action="" method='POST'>
+                {% csrf_token %}
+                {{forms.booking_gold_seat.as_hidden}}
+                {{forms.booking_platinum_seat.as_hidden}}
+                {{forms.booking_total_amount.as_hidden}}
+                {{forms.booking_show_id.as_hidden}}
+                {{forms.booking_user_id.as_hidden}}
+                <input type="submit" class='btn btn-success' value='Book'>
+            </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script>
+        let goldseat = []
+        let platinumseat = []
+        let total_price = 0;
+        $(".seat").click((e)=>{
+            let self = $(e.target);
+            let id = e.target.id;
+            if (!self.hasClass("booked")) {
+                self.toggleClass("clicked");
+            }
+            console.log(id)
+            if(self.hasClass("clicked")){
+                //let s = self.id
+                console.log(id)
+                if (id.split('_')[0] == 'g'){
+                    goldseat.push(id)
+                    $('#s-gold-seat').text(goldseat)
+                }else{
+                    platinumseat.push(id)
+                    $('#s-platinum-seat').text(platinumseat)
+                }
+
+            } else {
+                //console.log('id: ', id);
+                if (id.split('_')[0] == 'g'){
+                    goldseat = goldseat.filter(removee);
+                    $('#s-gold-seat').text(goldseat)
+                }else{
+                    platinumseat = platinumseat.filter(d=>d!==id)
+                    $('#s-platinum-seat').text(platinumseat)
+                }
+            }
+
+            let g = $('#s_gold_price').val();
+            let p = $('#s_platinum_price').val();
+            total_price = goldseat.length*g + platinumseat.length*p;
+            $('#s-total-amount').text(total_price);
+
+            new_gold_seat_list = goldseat.join(',');
+            $('#id_booking_gold_seat').val(new_gold_seat_list);
+            new_platinum_seat_list = platinumseat.join(',');
+            $('#id_booking_platinum_seat').val(new_platinum_seat_list);
+            $('#id_booking_total_amount').val(total_price);
+            $('#id_booking_show_id').val(1);
+            $('#id_booking_user_id').val(1);
+            //console.log(g,p,total_price);
+            //console.log(goldseat);
+            //console.log(platinumseat);
+            function removee(data) {
+                if (data != id) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        })
+    </script>
+{% endblock body %}

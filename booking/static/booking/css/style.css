@@ -1,0 +1,152 @@
+html, body {
+    min-height: 100%;
+    margin:0;
+}
+body{
+    background: rgb(8,8,8);
+    background: linear-gradient(0deg, rgba(8,8,8,1) 0%, rgba(0,0,0,1) 60%, rgba(255,0,0,1) 100%);
+}
+.navbar {
+    background-color: #000;
+    /* border: solid black 1px; */
+    padding: 10px 10vw;
+    font-size: large;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 1px 5px #000;
+}
+/* .container {
+    border: solid red 2px;
+} */
+.navbar-toggler{
+    background-color: #800;
+}
+
+.navbar-brand{
+    color:#ff0;
+    font-weight:900;
+}
+.nav-item a{
+    color: #f00 !important;
+    font-weight: bold;
+}
+.nav-item a:hover{
+    color: #fff !important;
+}
+.nav-item a.active{
+    color: #fff !important;
+}
+
+.nav-item a.disabled{
+    color: #950 !important;
+}
+.nav-item a:hover{
+    color: rgb(249, 208, 208);
+}
+.dropdown-item:hover{
+    color:rgb(241, 225, 225);
+    background-color: #000;
+}
+.main-body{
+    padding: 10px 10vw;
+}
+.card{
+    background-color: #500;
+}
+.card-title{
+    color:#fff;
+}
+.card-text{
+    color:#faa;
+}
+footer{
+    background-color: #200;
+    color:#950
+}
+.list-unstyled a{
+    color: #4f4f4f;
+}
+.table-space th{
+    padding: 8px 20px;
+    color: #feb !important;
+}
+.table-space td{
+    padding: 0 20px;
+}
+.table-space{
+    color: #faa !important;
+}
+.form-control{
+    color: #000 !important;
+    background-color: #4f4f4f;
+}
+.form-control::placeholder{
+    color: #fff !important;
+}
+/* .form-control:{
+    color: #fff !important;
+} */
+.col-3 .btn{
+    padding: 5px 15px;
+}
+.modal-content{
+    background-color: rgb(66, 51, 51);
+    color: #fff;
+}
+
+.about-image-size{
+    width:20vw;
+}
+.hall {
+    width: 300px;
+    margin: auto;
+}
+.hall .screen {
+    height: 10px;
+    border: solid 1px black;
+    margin: 10px 0 30px 0;
+    box-shadow: 0 5px 10px #aff;
+    background-color: #000;
+    border-radius: 5px;
+}
+.seat{
+    width: 25px;
+    max-width: 25px;
+    min-width: 25px;
+    height: 25px;
+    margin:2px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.55rem;
+    padding: 5px 5px 0px 5px;
+}
+.seatno {
+    margin-left: -6px;
+}
+.gold .seat{
+    background-color: #ffa;
+}
+.platinum .seat{
+    background-color: rgb(192, 235, 246);
+}
+
+.gold .seat.booked{
+    background-color: rgb(122, 122, 80);
+}
+.platinum .seat.booked{
+    background-color: rgb(103, 126, 131);
+}
+.seat.clicked {
+    outline: #ffffff solid 2px;
+    box-shadow: 0 0 5px 3px #000 inset;
+}
+#s-gold-seat{
+    font-size: 17px;
+}
+#s-platinum-seat{
+    font-size: 17px;
+}
+#s-total-amount{
+    font-size: 17px;
+}

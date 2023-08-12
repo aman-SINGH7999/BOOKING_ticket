@@ -1,0 +1,114 @@
+{% extends 'booking/admin_base.html' %}
+{% load static %}
+
+{% block adm_bas %}
+
+<div class="container main-body my-5">
+
+  <div class="card text-white">
+      <div class='bg-dark'>
+          <h3>Halls</h3>
+      </div>
+      
+      <table class="table table-sm border border-dark text-white table-space">
+          <thead>
+              <tr class=''>
+                <th scope="col">hall_id</th>
+                <th scope="col">hall_name</th>
+                <th scope="col">city_name</th>
+                <th scope="col">hall_ratting</th>
+                <th scope="col">hall_tear</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+                {% if halls %}
+                  {% for hall in halls %}
+                    <tr class=''>
+                      <th scope="row">{{hall.hall_id}}</th>
+                      <td>{{hall.hall_name}}</td>
+                      <td>{{hall.city_name}}</td>
+                      <td>{{hall.hall_ratting}}</td>
+                      <td>{{hall.hall_tear}}</td>
+                      <td>
+                          <div class="row my-3">
+                            <div class="col-4">
+                              <form action="{% url 'updatehall' hall.hall_id %}" method='POST' class="d-inline">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-outline-warning btn-sm updatebtn" data-bs-toggle="modal" data-bs-target="#updateModal{{hall.hall_id}}" id="updatebtn_{{hall.hall_id}}" data-bs-whatever="@mdo">Update</button>
+                              </form>
+                                <div class="modal fade" id="updateModal{{hall.hall_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Hall Detial ID-{{hall.hall_id}}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form action="{% url 'updatehall' hall.hall_id %}" method="POST">
+                                            {% csrf_token %}
+                                            {{addforms.as_p}}
+                                            <input type="submit" class="btn btn-success px-3" value="Update" />
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                          <form action="{% url 'deletehall' hall.hall_id %}" method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                          </form>
+                          <input type="hidden" id='i_hall_id_{{hall.hall_id}}' value='{{hall.hall_id}}'>
+                          <input type="hidden" id='i_hall_name_{{hall.hall_id}}' value='{{hall.hall_name}}'>
+                          <input type="hidden" id='i_hall_city_{{hall.hall_id}}' value='{{hall.city_name}}'>
+                          <input type="hidden" id='i_hall_ratting_{{hall.hall_id}}' value='{{hall.hall_ratting}}'>
+                          <input type="hidden" id='i_hall_tear_{{hall.hall_id}}' value='{{hall.hall_tear}}'>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                {% endif %}
+          </tbody>
+      </table>
+      <script>
+        $('.updatebtn').click((e)=>{
+          let btn_id = e.target.id;
+          let hall_id = btn_id.split('_')[1];
+          let hall_name = $('#i_hall_name_'+hall_id).val();
+          let hall_city = $('#i_hall_city_'+hall_id).val();
+          let hall_ratting = $('#i_hall_ratting_'+hall_id).val();
+          let hall_tear = $('#i_hall_tear_'+hall_id).val();
+          console.log(hall_id, hall_name, hall_city, hall_ratting, hall_tear);
+          $('#updateModal'+hall_id).find('#id_hall_name').val(hall_name)
+          $('#updateModal'+hall_id).find('#id_city_name').val(hall_city)
+          $('#updateModal'+hall_id).find('#id_hall_ratting').val(hall_ratting)
+          $('#updateModal'+hall_id).find('#id_hall_tear').val(hall_tear)
+        })
+      </script>
+  </div>
+
+  <div class="row my-3">
+    <div class="col-4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal" data-bs-whatever="@mdo">Add Hall</button>
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Hall Detial</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'halls' %}" method="POST">
+                    {% csrf_token %}
+                    {{addforms.as_p}}
+                    <input type="submit" class="btn btn-success px-3" value="Add" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock adm_bas %}

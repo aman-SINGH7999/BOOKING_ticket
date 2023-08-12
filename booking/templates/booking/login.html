@@ -1,0 +1,63 @@
+{% extends 'booking/home.html' %}
+{% load static %}
+{% block body %}
+<div class="container main-body">     
+    <section class="vh-100">
+        <div class="container h-100">
+                  <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1 card">
+      
+                      <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4" style='color:red'><span class='text-white'>Log</span>in</p>
+                                                                        {% comment %} novalidate {% endcomment %}
+                      <form action="" method='POST' class="mx-1 mx-md-4"> 
+                        {% csrf_token %}
+                        {% if forms %}
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <label class="form-label text-white" for="form3Example1c">Username</label>
+                            {{forms.username}}
+                          </div>
+                        </div>
+                
+                        <div class="d-flex flex-row align-items-center mb-4">
+                          <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                          <div class="form-outline flex-fill mb-0">
+                            <label class="form-label text-white" for="form3Example4c">Password</label>
+                            {{forms.password}}
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4 col-sm">
+                            <input type="hidden" name="past" id="past" value="{{request.GET.past}}">
+                            <input type="submit" class='btn btn-success' value='Log-in'>
+                          </div>
+                          <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4 col-sm">
+                            <a href="{% url 'signup' %}" class='btn btn-warning'>Sign-up</a>
+                          </div>
+                        </div>
+                        
+                        {% endif %}
+                      </form>
+                      {% if messages %}
+                          {% for message in messages %}
+                              <p {% if message.tags %} class="alert alert-{{message.tags}} text-white" {% endif %}>{{message}}</p>
+                          {% endfor %}
+                      {% endif %}
+                    </div>
+                  </div>
+        </div>
+      </section>
+</div>
+{% endblock body %}
+
+
+
+
+  {% comment %} <h3>Login</h3>
+            <form action="" class='my-5'>
+                {% if forms %}
+                <p>{{forms.username}}</p>
+                <p>{{forms.password1}}</p>
+                {% endif %}
+            </form> {% endcomment %}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movie booking</title>
+    <link rel="stylesheet" href="{% static 'booking/css/bootstrap.css' %} ">
+    <link rel="stylesheet" href="{% static 'booking/css/style.css' %}">
+    <script src="{% static 'booking/js/jquery.js' %}"></script>
+</head>
+<body>
+    {% include 'booking/navbar.html' %}
+    {% block body %}
+     <div class="container main-body">
+        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+              <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+              {% comment %} {{carousel}} {% endcomment %}
+              {% if carousel %}
+                {% for movie in carousel %}
+                  
+                  <div class="carousel-item {% if 1 == forloop.counter %} active {% endif %} ">
+                    <img src="/static/{{movie.movie_image}}" class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                      <h5>{{movie.movie_name}}</h5>
+                      <p>{{movie.movie_about|truncatechars:200}}</p>
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+              
+              {% comment %} <div class="carousel-item active">
+                <img src="static/{{obj1.movie_image}}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>{{obj1.movie_name}}</h5>
+                  <p>{{obj1.movie_about|truncatechars:80}}</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="static/{{obj2.movie_image}}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>{{obj2.movie_name}}</h5>
+                  <p>{{obj2.movie_about|truncatechars:80}}</p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="static/{{obj3.movie_image}}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                  <h5>{{obj3.movie_name}}</h5>
+                  <p>{{obj3.movie_about|truncatechars:80}}</p>
+                </div>
+              </div> {% endcomment %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+
+          <div class="row justify-content-between">
+            {% if movies %}
+              {% for movie in movies %}
+              <div class="col-sm">
+                <div class="card mx-auto my-5" style="width: 14rem;">
+                  <img src="static/{{movie.movie_image}}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">{{movie.movie_name}}</h5>
+                    <p class="card-text">{{movie.movie_about|truncatechars:80}}</p>
+                    {% comment %} <a href="{% url 'about'  %}" class="btn btn-danger">Book now</a> {% endcomment %}
+                    <form action="{% url 'about' movie.movie_id %}">
+                      <input type="submit" class='btn btn-danger' value='Book Now'/>
+                    </form>
+                  </div>
+                  {% comment %}  {% endcomment %}
+                </div>
+              </div>
+              {% endfor %}
+            {% endif %}
+
+            
+            {% comment %} <div class="col-sm">
+                <div class="card mx-auto my-5" style="width: 14rem;">
+                    <img src="static/booking/images/6366.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-danger">Book now</a>
+                    </div>
+                  </div>
+            </div> {% endcomment %}
+            {% comment %} <div class="col-sm">
+                <div class="card mx-auto my-5" style="width: 14rem;">
+                    <img src="{% static 'booking/images/21097.jpg' %}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" class="btn btn-danger">Book now</a>
+                    </div>
+                  </div>
+            </div> {% endcomment %}
+        </div>
+     </div>
+    {% endblock body %}
+
+    {% include 'booking/footer.html' %}
+
+    <script src="{% static 'booking/js/popper.js' %}"></script>
+    <script src="{% static 'booking/js/bootstrap.js' %}"></script>
+</body>
+</html>

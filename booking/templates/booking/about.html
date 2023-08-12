@@ -1,0 +1,73 @@
+{% extends 'booking/home.html' %}
+{% load static %}
+{% block body %}
+    <div class="container main-body">
+        {% if movies %}
+        {% comment %} {{movies.movie_image}}<br>
+        {{movies.movie_id}} <br>
+        {{movies.movie_name}} <br>
+        {{movies.movie_actor}}<br>
+        {{movies.movie_director}}<br>
+        {{movies.movie_produser}}<br>
+        {{movies.movie_about}}<br> {% endcomment %}
+        
+          <div class="card mb-3" style="max-width: 100%;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="/static/{{movies.movie_image}}" class="d-block about-image-size" alt="...">
+                {% comment %} <img src="/static/booking/images/37943.jpg" class="img-fluid rounded-start" alt="..."> {% endcomment %}
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{movies.movie_name}}</h5>
+                  <p class="card-text"><b>Actot : </b>{{movies.movie_actor}}</p>
+                  <p class="card-text"><b>DIrector : </b>{{movies.movie_director}}</p>
+                  <p class="card-text"><b>Produser : </b>{{movies.movie_produser}}</p>
+                  <p class="card-text text-muted">{{movies.movie_about}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+    </div>
+    <div class="container main-body my-5">
+        <div class="card">
+            <div class='bg-dark text-white'>
+                <h3>Shows</h3>
+            </div>
+            <table class="table table-sm border border-dark table-space">
+                <thead>
+                    <tr class=''>
+                      <th scope="col">Shows No.</th>
+                      <th scope="col">Date & Time</th>
+                      <th scope="col">Gold Seat</th>
+                      <th scope="col">Platinum Seat</th>
+                      <th scope="col">Hall Name</th>
+                      <th scope="col">Hall City</th>
+                      <th scope="col">BOOK</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if shows %}
+                      {% for show in shows %}
+                        <tr class=''>
+                        <th scope="row">{{show.show_id}}</th>
+                        <td>{{show.date_time}}</td>
+                        <td>{{show.gold_seat}}</td>
+                        <td>{{show.platinum_seat}}</td>
+                        <td>{{show.hall.hall_name}}</td>
+                        <td>{{show.hall.city_name}}</td>
+                        <td>
+                            <form action="{% url 'booking' show.show_id %}?past={% url 'booking' show.show_id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-warning btn-sm mt-1">Book</button>
+                            </form> 
+                        </td>
+                        </tr>
+                      {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock body %}
